@@ -579,7 +579,7 @@ const ClientDetails = () => {
                     </Box>
 
                     <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={12}>
                         <Accordion
                           sx={{
                             borderRadius: 2,
@@ -608,7 +608,7 @@ const ClientDetails = () => {
                         </Accordion>
                       </Grid>
 
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={12}>
                         <Accordion
                           sx={{
                             borderRadius: 2,
@@ -637,7 +637,7 @@ const ClientDetails = () => {
                         </Accordion>
                       </Grid>
 
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={12}>
                         <Accordion
                           sx={{
                             borderRadius: 2,
@@ -664,7 +664,66 @@ const ClientDetails = () => {
                             </Paper>
                           </AccordionDetails>
                         </Accordion>
+                      </Grid> 
+
+                       <Grid item xs={12} md={12}>
+                        <Accordion
+                          sx={{
+                            borderRadius: 2,
+                            "&:before": { display: "none" },
+                            boxShadow: 1,
+                          }}
+                        >
+                          <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Typography variant='subtitle2' fontWeight={600}>
+                              Follow-Up System Prompt
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Paper
+                              variant='outlined'
+                              sx={{ p: 2, bgcolor: "grey.50", borderRadius: 2 }}
+                            >
+                              <Typography
+                                variant='body2'
+                                style={{ whiteSpace: "pre-wrap" }}
+                              >
+                                {client.system_prompt_followup}
+                              </Typography>
+                            </Paper>
+                          </AccordionDetails>
+                        </Accordion>
+                      </Grid>  
+
+                       <Grid item xs={12} md={12}>
+                        <Accordion
+                          sx={{
+                            borderRadius: 2,
+                            "&:before": { display: "none" },
+                            boxShadow: 1,
+                          }}
+                        >
+                          <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Typography variant='subtitle2' fontWeight={600}>
+                              Schedule Appointment System Prompt
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Paper
+                              variant='outlined'
+                              sx={{ p: 2, bgcolor: "grey.50", borderRadius: 2 }}
+                            >
+                              <Typography
+                                variant='body2'
+                                style={{ whiteSpace: "pre-wrap" }}
+                              >
+                                {client.system_prompt_appointment_schedule}
+                              </Typography>
+                            </Paper>
+                          </AccordionDetails>
+                        </Accordion>
                       </Grid>
+
                     </Grid>
                   </CardContent>
                 </Card>

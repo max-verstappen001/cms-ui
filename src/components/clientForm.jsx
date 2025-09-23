@@ -36,6 +36,19 @@ import {
   Security,
 } from "@mui/icons-material";
 import { clientAPI } from "../services/api";
+import {time_zones} from "../utils/timeZone";
+
+const gptList = [
+  { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
+  { value: "gpt-4", label: "GPT-4" },
+  { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
+  { value: "gpt-4o", label: "GPT-4o" },
+  { value: "gpt-4o-mini", label: "GPT-4o Mini" },
+  { value: "gpt-5-turbo", label: "GPT-5 Turbo" },
+  { value: "gpt-5o", label: "GPT-5o" },
+  { value: "gpt-5o-mini", label: "GPT-5o Mini" },
+  { value: "gpt-5", label: "GPT-5" },
+];
 
 const ClientForm = () => {
   const navigate = useNavigate();
@@ -397,10 +410,11 @@ const ClientForm = () => {
                         label='OpenAI Model'
                         sx={{ borderRadius: 2 }}
                       >
-                        <MenuItem value='gpt-3.5-turbo'>GPT-3.5 Turbo</MenuItem>
-                        <MenuItem value='gpt-4'>GPT-4</MenuItem>
-                        <MenuItem value='gpt-4-turbo'>GPT-4 Turbo</MenuItem>
-                        <MenuItem value='gpt-4o'>GPT-4o</MenuItem>
+                        {gptList.map((model) => (
+                          <MenuItem key={model.value} value={model.value}>
+                            {model.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -502,273 +516,11 @@ const ClientForm = () => {
                         label='Time Zone'
                         sx={{ borderRadius: 2 }}
                       >
-                        {/* UTC */}
-                        <MenuItem value='UTC'>UTC</MenuItem>
-
-                        {/* Americas */}
-                        <MenuItem value='America/New_York'>
-                          America/New_York (EST/EDT)
-                        </MenuItem>
-                        <MenuItem value='America/Chicago'>
-                          America/Chicago (CST/CDT)
-                        </MenuItem>
-                        <MenuItem value='America/Denver'>
-                          America/Denver (MST/MDT)
-                        </MenuItem>
-                        <MenuItem value='America/Los_Angeles'>
-                          America/Los_Angeles (PST/PDT)
-                        </MenuItem>
-                        <MenuItem value='America/Anchorage'>
-                          America/Anchorage (AKST/AKDT)
-                        </MenuItem>
-                        <MenuItem value='America/Phoenix'>
-                          America/Phoenix (MST)
-                        </MenuItem>
-                        <MenuItem value='America/Toronto'>
-                          America/Toronto
-                        </MenuItem>
-                        <MenuItem value='America/Montreal'>
-                          America/Montreal
-                        </MenuItem>
-                        <MenuItem value='America/Vancouver'>
-                          America/Vancouver
-                        </MenuItem>
-                        <MenuItem value='America/Halifax'>
-                          America/Halifax
-                        </MenuItem>
-                        <MenuItem value='America/Mexico_City'>
-                          America/Mexico_City
-                        </MenuItem>
-                        <MenuItem value='America/Guatemala'>
-                          America/Guatemala
-                        </MenuItem>
-                        <MenuItem value='America/Bogota'>
-                          America/Bogota
-                        </MenuItem>
-                        <MenuItem value='America/Lima'>America/Lima</MenuItem>
-                        <MenuItem value='America/Santiago'>
-                          America/Santiago
-                        </MenuItem>
-                        <MenuItem value='America/Buenos_Aires'>
-                          America/Buenos_Aires
-                        </MenuItem>
-                        <MenuItem value='America/Sao_Paulo'>
-                          America/Sao_Paulo
-                        </MenuItem>
-                        <MenuItem value='America/Caracas'>
-                          America/Caracas
-                        </MenuItem>
-                        <MenuItem value='America/Havana'>
-                          America/Havana
-                        </MenuItem>
-                        <MenuItem value='America/Jamaica'>
-                          America/Jamaica
-                        </MenuItem>
-
-                        {/* Europe */}
-                        <MenuItem value='Europe/London'>
-                          Europe/London (GMT/BST)
-                        </MenuItem>
-                        <MenuItem value='Europe/Dublin'>Europe/Dublin</MenuItem>
-                        <MenuItem value='Europe/Paris'>
-                          Europe/Paris (CET/CEST)
-                        </MenuItem>
-                        <MenuItem value='Europe/Berlin'>Europe/Berlin</MenuItem>
-                        <MenuItem value='Europe/Rome'>Europe/Rome</MenuItem>
-                        <MenuItem value='Europe/Madrid'>Europe/Madrid</MenuItem>
-                        <MenuItem value='Europe/Amsterdam'>
-                          Europe/Amsterdam
-                        </MenuItem>
-                        <MenuItem value='Europe/Brussels'>
-                          Europe/Brussels
-                        </MenuItem>
-                        <MenuItem value='Europe/Vienna'>Europe/Vienna</MenuItem>
-                        <MenuItem value='Europe/Zurich'>Europe/Zurich</MenuItem>
-                        <MenuItem value='Europe/Prague'>Europe/Prague</MenuItem>
-                        <MenuItem value='Europe/Warsaw'>Europe/Warsaw</MenuItem>
-                        <MenuItem value='Europe/Budapest'>
-                          Europe/Budapest
-                        </MenuItem>
-                        <MenuItem value='Europe/Bucharest'>
-                          Europe/Bucharest
-                        </MenuItem>
-                        <MenuItem value='Europe/Athens'>Europe/Athens</MenuItem>
-                        <MenuItem value='Europe/Helsinki'>
-                          Europe/Helsinki
-                        </MenuItem>
-                        <MenuItem value='Europe/Stockholm'>
-                          Europe/Stockholm
-                        </MenuItem>
-                        <MenuItem value='Europe/Oslo'>Europe/Oslo</MenuItem>
-                        <MenuItem value='Europe/Copenhagen'>
-                          Europe/Copenhagen
-                        </MenuItem>
-                        <MenuItem value='Europe/Moscow'>Europe/Moscow</MenuItem>
-                        <MenuItem value='Europe/Kiev'>Europe/Kiev</MenuItem>
-                        <MenuItem value='Europe/Istanbul'>
-                          Europe/Istanbul
-                        </MenuItem>
-
-                        {/* Asia */}
-                        <MenuItem value='Asia/Tokyo'>Asia/Tokyo (JST)</MenuItem>
-                        <MenuItem value='Asia/Seoul'>Asia/Seoul</MenuItem>
-                        <MenuItem value='Asia/Shanghai'>
-                          Asia/Shanghai (CST)
-                        </MenuItem>
-                        <MenuItem value='Asia/Hong_Kong'>
-                          Asia/Hong_Kong
-                        </MenuItem>
-                        <MenuItem value='Asia/Taipei'>Asia/Taipei</MenuItem>
-                        <MenuItem value='Asia/Singapore'>
-                          Asia/Singapore
-                        </MenuItem>
-                        <MenuItem value='Asia/Bangkok'>Asia/Bangkok</MenuItem>
-                        <MenuItem value='Asia/Jakarta'>Asia/Jakarta</MenuItem>
-                        <MenuItem value='Asia/Manila'>Asia/Manila</MenuItem>
-                        <MenuItem value='Asia/Kuala_Lumpur'>
-                          Asia/Kuala_Lumpur
-                        </MenuItem>
-                        <MenuItem value='Asia/Ho_Chi_Minh'>
-                          Asia/Ho_Chi_Minh
-                        </MenuItem>
-                        <MenuItem value='Asia/Kolkata'>
-                          Asia/Kolkata (IST)
-                        </MenuItem>
-                        <MenuItem value='Asia/Mumbai'>Asia/Mumbai</MenuItem>
-                        <MenuItem value='Asia/Dhaka'>Asia/Dhaka</MenuItem>
-                        <MenuItem value='Asia/Karachi'>Asia/Karachi</MenuItem>
-
-                        {/* Middle East */}
-                        <MenuItem value='Asia/Dubai'>Asia/Dubai (UAE)</MenuItem>
-                        <MenuItem value='Asia/Qatar'>Asia/Qatar</MenuItem>
-                        <MenuItem value='Asia/Kuwait'>Asia/Kuwait</MenuItem>
-                        <MenuItem value='Asia/Bahrain'>Asia/Bahrain</MenuItem>
-                        <MenuItem value='Asia/Muscat'>
-                          Asia/Muscat (Oman)
-                        </MenuItem>
-                        <MenuItem value='Asia/Riyadh'>
-                          Asia/Riyadh (Saudi Arabia)
-                        </MenuItem>
-                        <MenuItem value='Asia/Tehran'>
-                          Asia/Tehran (Iran)
-                        </MenuItem>
-                        <MenuItem value='Asia/Baghdad'>
-                          Asia/Baghdad (Iraq)
-                        </MenuItem>
-                        <MenuItem value='Asia/Damascus'>
-                          Asia/Damascus (Syria)
-                        </MenuItem>
-                        <MenuItem value='Asia/Beirut'>
-                          Asia/Beirut (Lebanon)
-                        </MenuItem>
-                        <MenuItem value='Asia/Amman'>
-                          Asia/Amman (Jordan)
-                        </MenuItem>
-                        <MenuItem value='Asia/Jerusalem'>
-                          Asia/Jerusalem (Israel)
-                        </MenuItem>
-                        <MenuItem value='Asia/Gaza'>
-                          Asia/Gaza (Palestine)
-                        </MenuItem>
-                        <MenuItem value='Asia/Nicosia'>
-                          Asia/Nicosia (Cyprus)
-                        </MenuItem>
-                        <MenuItem value='Asia/Yerevan'>
-                          Asia/Yerevan (Armenia)
-                        </MenuItem>
-                        <MenuItem value='Asia/Tbilisi'>
-                          Asia/Tbilisi (Georgia)
-                        </MenuItem>
-                        <MenuItem value='Asia/Baku'>
-                          Asia/Baku (Azerbaijan)
-                        </MenuItem>
-                        <MenuItem value='Asia/Almaty'>Asia/Almaty</MenuItem>
-                        <MenuItem value='Asia/Tashkent'>Asia/Tashkent</MenuItem>
-                        <MenuItem value='Asia/Yekaterinburg'>
-                          Asia/Yekaterinburg
-                        </MenuItem>
-                        <MenuItem value='Asia/Omsk'>Asia/Omsk</MenuItem>
-                        <MenuItem value='Asia/Krasnoyarsk'>
-                          Asia/Krasnoyarsk
-                        </MenuItem>
-                        <MenuItem value='Asia/Irkutsk'>Asia/Irkutsk</MenuItem>
-                        <MenuItem value='Asia/Vladivostok'>
-                          Asia/Vladivostok
-                        </MenuItem>
-
-                        {/* Africa */}
-                        <MenuItem value='Africa/Cairo'>Africa/Cairo</MenuItem>
-                        <MenuItem value='Africa/Lagos'>Africa/Lagos</MenuItem>
-                        <MenuItem value='Africa/Nairobi'>
-                          Africa/Nairobi
-                        </MenuItem>
-                        <MenuItem value='Africa/Johannesburg'>
-                          Africa/Johannesburg
-                        </MenuItem>
-                        <MenuItem value='Africa/Casablanca'>
-                          Africa/Casablanca
-                        </MenuItem>
-                        <MenuItem value='Africa/Algiers'>
-                          Africa/Algiers
-                        </MenuItem>
-                        <MenuItem value='Africa/Tunis'>Africa/Tunis</MenuItem>
-                        <MenuItem value='Africa/Addis_Ababa'>
-                          Africa/Addis_Ababa
-                        </MenuItem>
-                        <MenuItem value='Africa/Dar_es_Salaam'>
-                          Africa/Dar_es_Salaam
-                        </MenuItem>
-                        <MenuItem value='Africa/Kampala'>
-                          Africa/Kampala
-                        </MenuItem>
-                        <MenuItem value='Africa/Khartoum'>
-                          Africa/Khartoum
-                        </MenuItem>
-
-                        {/* Australia/Oceania */}
-                        <MenuItem value='Australia/Sydney'>
-                          Australia/Sydney (AEST/AEDT)
-                        </MenuItem>
-                        <MenuItem value='Australia/Melbourne'>
-                          Australia/Melbourne
-                        </MenuItem>
-                        <MenuItem value='Australia/Brisbane'>
-                          Australia/Brisbane
-                        </MenuItem>
-                        <MenuItem value='Australia/Perth'>
-                          Australia/Perth
-                        </MenuItem>
-                        <MenuItem value='Australia/Adelaide'>
-                          Australia/Adelaide
-                        </MenuItem>
-                        <MenuItem value='Australia/Darwin'>
-                          Australia/Darwin
-                        </MenuItem>
-                        <MenuItem value='Pacific/Auckland'>
-                          Pacific/Auckland
-                        </MenuItem>
-                        <MenuItem value='Pacific/Fiji'>Pacific/Fiji</MenuItem>
-                        <MenuItem value='Pacific/Honolulu'>
-                          Pacific/Honolulu (HST)
-                        </MenuItem>
-                        <MenuItem value='Pacific/Guam'>Pacific/Guam</MenuItem>
-                        <MenuItem value='Pacific/Tahiti'>
-                          Pacific/Tahiti
-                        </MenuItem>
-
-                        {/* Atlantic */}
-                        <MenuItem value='Atlantic/Azores'>
-                          Atlantic/Azores
-                        </MenuItem>
-                        <MenuItem value='Atlantic/Canary'>
-                          Atlantic/Canary
-                        </MenuItem>
-                        <MenuItem value='Atlantic/Cape_Verde'>
-                          Atlantic/Cape_Verde
-                        </MenuItem>
-                        <MenuItem value='Atlantic/Reykjavik'>
-                          Atlantic/Reykjavik
-                        </MenuItem>
+                        {time_zones.map((tz) => (
+                          <MenuItem key={tz.value} value={tz.value}>
+                            {tz.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
