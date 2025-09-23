@@ -50,6 +50,8 @@ const ClientForm = () => {
     system_prompt_defult: "You are a helpful assistant.",
     system_prompt_attributes: "You are a helpful assistant.",
     system_prompt_lead_classification: "You are a helpful assistant.",
+    system_prompt_followup:  "You are a helpful assistant.",
+    system_prompt_appointment_schedule:  "You are a helpful assistant.",
     max_response_tokens: 500,
     temperature: 0.7,
     calendar_id: "",
@@ -294,6 +296,50 @@ const ClientForm = () => {
                         value={formData.system_prompt_lead_classification}
                         onChange={handleChange}
                         placeholder='Enter the lead classification system prompt...'
+                        variant='outlined'
+                        sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+
+                  {/* Schedule Prompt*/}
+                   <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography variant='h6'>
+                        Appointment Schedule System Prompt
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        name='system_prompt_appointment_schedule'
+                        value={formData.system_prompt_appointment_schedule}
+                        onChange={handleChange}
+                        placeholder='Enter the appointment schedule system prompt...'
+                        variant='outlined'
+                        sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+
+                   {/*  Prompt*/}
+                   <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography variant='h6'>
+                        Follow-up System Prompt
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        name='system_prompt_followup'
+                        value={formData.system_prompt_followup}
+                        onChange={handleChange}
+                        placeholder='Enter the follow up system prompt...'
                         variant='outlined'
                         sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
                       />
