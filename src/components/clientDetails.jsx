@@ -601,7 +601,7 @@ const ClientDetails = () => {
                                 variant='body2'
                                 style={{ whiteSpace: "pre-wrap" }}
                               >
-                                {client.system_prompt_defult}
+                                {client.system_prompt_default}
                               </Typography>
                             </Paper>
                           </AccordionDetails>
