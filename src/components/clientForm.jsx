@@ -60,7 +60,7 @@ const ClientForm = () => {
     client_name: "",
     bot_api_key: "",
     api_key: "",
-    system_prompt_defult: "You are a helpful assistant.",
+    system_prompt_default: "You are a helpful assistant.",
     system_prompt_attributes: "You are a helpful assistant.",
     system_prompt_lead_classification: "You are a helpful assistant.",
     system_prompt_followup:  "You are a helpful assistant.",
@@ -263,8 +263,8 @@ const ClientForm = () => {
                         fullWidth
                         multiline
                         rows={4}
-                        name='system_prompt_defult'
-                        value={formData.system_prompt_defult}
+                        name='system_prompt_default'
+                        value={formData.system_prompt_default}
                         onChange={handleChange}
                         placeholder='Enter the default system prompt...'
                         variant='outlined'
