@@ -57,9 +57,8 @@ const ClientForm = () => {
 
   const [formData, setFormData] = useState({
     account_id: "",
+    user_id: "",
     client_name: "",
-    bot_api_key: "",
-    api_key: "",
     system_prompt_default: "You are a helpful assistant.",
     system_prompt_attributes: "You are a helpful assistant.",
     system_prompt_lead_classification: "You are a helpful assistant.",
@@ -205,7 +204,7 @@ const ClientForm = () => {
                 <Divider sx={{ mb: 3 }} />
 
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       fullWidth
                       label='Account ID'
@@ -224,7 +223,20 @@ const ClientForm = () => {
                       sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label='User ID'
+                      name='user_id'
+                      value={formData.user_id}
+                      onChange={handleChange}
+                      required
+                      helperText='Unique user identifier for this client'
+                      variant='outlined'
+                      sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       fullWidth
                       label='Client Name'
@@ -428,34 +440,6 @@ const ClientForm = () => {
                       onChange={handleChange}
                       placeholder='sk-...'
                       helperText='Your OpenAI API key will be encrypted and stored securely'
-                      variant='outlined'
-                      sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label='Bot API Key'
-                      name='bot_api_key'
-                      type='password'
-                      value={formData.bot_api_key}
-                      onChange={handleChange}
-                      placeholder='bot_...'
-                      helperText='Bot API key will be encrypted before transmission and storage'
-                      variant='outlined'
-                      sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label='General API Key'
-                      name='api_key'
-                      type='password'
-                      value={formData.api_key}
-                      onChange={handleChange}
-                      placeholder='api_...'
-                      helperText='General API key will be encrypted before transmission and storage'
                       variant='outlined'
                       sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
                     />

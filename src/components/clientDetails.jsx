@@ -161,6 +161,9 @@ const ClientDetails = () => {
               <Typography variant='subtitle1' color='text.secondary' mb={1}>
                 Account ID: {client.account_id}
               </Typography>
+              <Typography variant='subtitle1' color='text.secondary' mb={1}>
+                User ID: {client.user_id}
+              </Typography>
               <Box display='flex' gap={3} mt={2}>
                 <Box display='flex' alignItems='center' gap={1}>
                   <AccessTime fontSize='small' color='action' />
@@ -353,61 +356,6 @@ const ClientDetails = () => {
                             client.openai_api_key ? "Configured" : "Not Set"
                           }
                           color={client.openai_api_key ? "success" : "error"}
-                          variant='filled'
-                          size='small'
-                          sx={{ fontWeight: 500 }}
-                        />
-                      </Box>
-
-                      <Box
-                        sx={{
-                          p: 2,
-                          borderRadius: 2,
-                          bgcolor: "background.paper",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          mb: 2,
-                        }}
-                      >
-                        <Box display='flex' alignItems='center' gap={1}>
-                          <Key fontSize='small' color='action' />
-                          <Typography variant='subtitle2' fontWeight={500}>
-                            Bot API Key
-                          </Typography>
-                        </Box>
-                        <Chip
-                          label={client.bot_api_key ? "Configured" : "Not Set"}
-                          color={client.bot_api_key ? "success" : "error"}
-                          variant='filled'
-                          size='small'
-                          sx={{ fontWeight: 500 }}
-                        />
-                      </Box>
-
-                      <Box
-                        sx={{
-                          p: 2,
-                          borderRadius: 2,
-                          bgcolor: "background.paper",
-                          border: "1px solid",
-                          borderColor: "divider",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Box display='flex' alignItems='center' gap={1}>
-                          <Key fontSize='small' color='action' />
-                          <Typography variant='subtitle2' fontWeight={500}>
-                            General API Key
-                          </Typography>
-                        </Box>
-                        <Chip
-                          label={client.api_key ? "Configured" : "Not Set"}
-                          color={client.api_key ? "success" : "error"}
                           variant='filled'
                           size='small'
                           sx={{ fontWeight: 500 }}
