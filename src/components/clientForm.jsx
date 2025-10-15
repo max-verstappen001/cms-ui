@@ -34,6 +34,8 @@ import {
   Schedule,
   SmartToy,
   Security,
+  Delete,
+  AddCircle,
 } from "@mui/icons-material";
 import { clientAPI } from "../services/api";
 import {time_zones} from "../utils/timeZone";
@@ -70,7 +72,10 @@ const ClientForm = () => {
     time_zone: "UTC",
     openai_api_key: "",
     openai_ai_model: "gpt-3.5-turbo",
-    reminder_min: 30,
+    // reminder_min: 30,
+    remainders_list: [
+      { time: 30, name: "Initial Follow-up" }
+    ],
     status: "active",
   });
 
@@ -83,12 +88,43 @@ const ClientForm = () => {
     }
   }, [id]);
 
+  // Ensure follow-up reminders list is always initialized
+  useEffect(() => {
+    if (!formData.remainders_list || !Array.isArray(formData.remainders_list) || formData.remainders_list.length === 0) {
+      setFormData(prev => ({
+        ...prev,
+        remainders_list: [{ time: prev.reminder_min || 30, name: "Initial Follow-up" }]
+      }));
+    }
+  }, [formData.reminder_min]);
+
   const fetchClient = async () => {
     try {
       setLoading(true);
       const response = await clientAPI.getClientById(id);
       // Handle new backend response structure
       const clientData = response.data.client || response.data;
+      
+      // Handle backward compatibility for follow-up reminders list
+      if (!clientData.remainders_list || !Array.isArray(clientData.remainders_list) || clientData.remainders_list.length === 0) {
+        if (clientData.reminder_min) {
+          clientData.remainders_list = [
+            { time: clientData.reminder_min, name: "Initial Follow-up" }
+          ];
+        } else {
+          clientData.remainders_list = [
+            { time: 30, name: "Initial Follow-up" }
+          ];
+        }
+      }
+      
+      // Ensure each follow-up reminder has both time and name properties
+      clientData.remainders_list = clientData.remainders_list.map((remainder, index) => ({
+        time: remainder.time || 30,
+        name: remainder.name || `Follow-up ${index + 1}`
+      }));
+      
+      console.log('Loaded client data:', clientData); // Debug log
       setFormData(clientData);
       setError(null);
     } catch (err) {
@@ -105,6 +141,38 @@ const ClientForm = () => {
       ...prev,
       [name]: type === "number" ? Number(value) : value,
     }));
+  };
+
+  const handleFollowupChange = (index, field, value) => {
+    const updatedRemainders = [...formData.remainders_list];
+    updatedRemainders[index] = {
+      ...updatedRemainders[index],
+      [field]: field === 'time' ? Number(value) : value,
+    };
+    setFormData((prev) => ({
+      ...prev,
+      remainders_list: updatedRemainders,
+    }));
+  };
+
+  const addFollowup = () => {
+    setFormData((prev) => ({
+      ...prev,
+      remainders_list: [
+        ...prev.remainders_list,
+        { time: 60, name: "New Follow-up" }
+      ],
+    }));
+  };
+
+  const removeFollowup = (index) => {
+    if (formData.remainders_list.length > 1) {
+      const updatedRemainders = formData.remainders_list.filter((_, i) => i !== index);
+      setFormData((prev) => ({
+        ...prev,
+        remainders_list: updatedRemainders,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -508,19 +576,163 @@ const ClientForm = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                  
+                  {/* Multiple Follow-up Reminders Section */}
+                  <Grid item xs={12}>
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant='h6' gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Schedule color='primary' />
+                        Follow-up Reminder Settings
+                      </Typography>
+                      <Typography variant='body2' color='text.secondary' gutterBottom>
+                        Configure multiple follow-up reminders with custom names and timing
+                      </Typography>
+                    </Box>
+                    
+                    <Stack spacing={3}>
+                      {(formData.remainders_list && Array.isArray(formData.remainders_list) && formData.remainders_list.length > 0) ? 
+                        formData.remainders_list.map((remainder, index) => (
+                        <Paper
+                          key={index}
+                          elevation={2}
+                          sx={{
+                            p: 3,
+                            borderRadius: 3,
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+                            '&:hover': {
+                              borderColor: 'primary.main',
+                              boxShadow: 3,
+                              transform: 'translateY(-1px)',
+                            },
+                            transition: 'all 0.2s ease-in-out',
+                          }}
+                        >
+                          <Grid container spacing={3} alignItems='center'>
+                            <Grid item xs={12} sm={5}>
+                              <TextField
+                                fullWidth
+                                label='Follow-up Name'
+                                value={remainder.name || ''}
+                                onChange={(e) => handleFollowupChange(index, 'name', e.target.value)}
+                                variant='outlined'
+                                sx={{ 
+                                  "& .MuiOutlinedInput-root": { 
+                                    borderRadius: 2,
+                                    bgcolor: 'white',
+                                  } 
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                              <TextField
+                                fullWidth
+                                label='Time (Minutes)'
+                                type='number'
+                                value={remainder.time || 30}
+                                onChange={(e) => handleFollowupChange(index, 'time', e.target.value)}
+                                inputProps={{ min: 1 }}
+                                variant='outlined'
+                                sx={{ 
+                                  "& .MuiOutlinedInput-root": { 
+                                    borderRadius: 2,
+                                    bgcolor: 'white',
+                                  } 
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                              <Stack direction='row' spacing={1} justifyContent='flex-end'>
+                                {index === formData.remainders_list.length - 1 && (
+                                  <Button
+                                    variant='contained'
+                                    color='primary'
+                                    onClick={addFollowup}
+                                    startIcon={<AddCircle />}
+                                    sx={{ 
+                                      borderRadius: 2,
+                                      minWidth: 100,
+                                      boxShadow: 2,
+                                    }}
+                                  >
+                                    Add
+                                  </Button>
+                                )}
+                                {formData.remainders_list.length > 1 && (
+                                  <Button
+                                    variant='outlined'
+                                    color='error'
+                                    onClick={() => removeFollowup(index)}
+                                    startIcon={<Delete />}
+                                    sx={{ 
+                                      borderRadius: 2,
+                                      minWidth: 100,
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                )}
+                              </Stack>
+                            </Grid>
+                          </Grid>
+                        </Paper>
+                      )) : (
+                        <Paper
+                          elevation={2}
+                          sx={{
+                            p: 4,
+                            borderRadius: 3,
+                            border: '2px dashed',
+                            borderColor: 'primary.light',
+                            textAlign: 'center',
+                            background: 'linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%)',
+                          }}
+                        >
+                          <Schedule sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                          <Typography variant='h6' color='primary.main' gutterBottom>
+                            No Follow-up Reminders Configured
+                          </Typography>
+                          <Typography variant='body2' color='text.secondary' gutterBottom sx={{ mb: 3 }}>
+                            Set up your first follow-up reminder to get started
+                          </Typography>
+                          <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={addFollowup}
+                            startIcon={<AddCircle />}
+                            size='large'
+                            sx={{ borderRadius: 3, px: 4, py: 1.5 }}
+                          >
+                            Add First Follow-up
+                          </Button>
+                        </Paper>
+                      )}
+                    </Stack>
+                  </Grid>
+
+                  {/* Legacy reminder field is now commented out - use Reminder Settings above */}
+                  {/* 
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label='Reminder (Minutes)'
+                      label='Legacy Reminder (Minutes)'
                       name='reminder_min'
                       type='number'
                       value={formData.reminder_min}
                       onChange={handleChange}
                       inputProps={{ min: 1 }}
+                      helperText='Backward compatibility - use Reminder Settings above'
                       variant='outlined'
-                      sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                      disabled
+                      sx={{ 
+                        "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                        opacity: 0.6,
+                      }}
                     />
                   </Grid>
+                  */}
+                  
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <InputLabel>Status</InputLabel>

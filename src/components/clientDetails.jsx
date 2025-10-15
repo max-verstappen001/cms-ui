@@ -37,6 +37,7 @@ import {
   CalendarToday,
   Key,
   AccessTime,
+  NotificationImportant,
 } from "@mui/icons-material";
 import { clientAPI } from "../services/api";
 import FileManager from "./FileManager";
@@ -60,6 +61,18 @@ const ClientDetails = () => {
       const response = await clientAPI.getClientById(id);
       // Handle new backend response structure
       const clientData = response.data.client || response.data;
+      
+      // Handle backward compatibility for follow-up reminders list
+      if (!clientData.remainders_list && clientData.reminder_min) {
+        clientData.remainders_list = [
+          { time: clientData.reminder_min, name: "Initial Follow-up" }
+        ];
+      } else if (!clientData.remainders_list) {
+        clientData.remainders_list = [
+          { time: 30, name: "Initial Follow-up" }
+        ];
+      }
+      
       setClient(clientData);
       setError(null);
     } catch (err) {
@@ -433,7 +446,7 @@ const ClientDetails = () => {
                       <Box
                         sx={{
                           display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
+                          gridTemplateColumns: "1fr", // Changed to single column since legacy field is commented out
                           gap: 2,
                         }}
                       >
@@ -462,6 +475,8 @@ const ClientDetails = () => {
                           </Typography>
                         </Box>
 
+                        {/* Legacy reminder field is commented out - see follow-up reminders below */}
+                        {/*
                         <Box
                           sx={{
                             p: 2,
@@ -469,6 +484,7 @@ const ClientDetails = () => {
                             bgcolor: "background.paper",
                             border: "1px solid",
                             borderColor: "divider",
+                            opacity: 0.7,
                           }}
                         >
                           <Typography
@@ -476,15 +492,131 @@ const ClientDetails = () => {
                             color='text.secondary'
                             display='block'
                           >
-                            Reminder (min)
+                            Legacy Reminder (deprecated)
                           </Typography>
                           <Typography
+                            variant='body2'
+                            fontWeight={500}
+                            color='text.secondary'
+                            sx={{ fontStyle: 'italic' }}
+                          >
+                            {client.reminder_min} min
+                          </Typography>
+                          <Typography
+                            variant='caption'
+                            color='text.secondary'
+                            display='block'
+                            sx={{ mt: 0.5 }}
+                          >
+                            Use follow-up reminders above
+                          </Typography>
+                        </Box>
+                        */}
+                      </Box>
+
+                      {/* Multiple Follow-up Reminders Display */}
+                      <Box
+                        sx={{
+                          p: 3,
+                          borderRadius: 3,
+                          bgcolor: "background.paper",
+                          border: "1px solid",
+                          borderColor: "divider",
+                          boxShadow: 1,
+                        }}
+                      >
+                        <Box display='flex' alignItems='center' gap={1} mb={3}>
+                          <NotificationImportant 
+                            fontSize='medium' 
+                            color='info' 
+                          />
+                          <Typography
                             variant='h6'
-                            fontWeight={600}
+                            fontWeight={700}
                             color='info.main'
                           >
-                            {client.reminder_min}
+                            Follow-up Reminders
                           </Typography>
+                        </Box>
+                        
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          {client.remainders_list && client.remainders_list.length > 0 ? (
+                            client.remainders_list.map((remainder, index) => (
+                              <Box
+                                key={index}
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  p: 2,
+                                  borderRadius: 2,
+                                  bgcolor: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+                                  border: '1px solid',
+                                  borderColor: 'grey.200',
+                                  boxShadow: 1,
+                                  '&:hover': {
+                                    boxShadow: 2,
+                                    borderColor: 'info.light',
+                                  },
+                                  transition: 'all 0.2s ease-in-out',
+                                }}
+                              >
+                                <Box>
+                                  <Typography
+                                    variant='body1'
+                                    fontWeight={600}
+                                    color='text.primary'
+                                    gutterBottom
+                                  >
+                                    {remainder.name}
+                                  </Typography>
+                                  <Typography
+                                    variant='caption'
+                                    color='text.secondary'
+                                  >
+                                    Follow-up #{index + 1}
+                                  </Typography>
+                                </Box>
+                                <Chip
+                                  label={`${remainder.time} minutes`}
+                                  size='medium'
+                                  color='info'
+                                  variant='filled'
+                                  sx={{ 
+                                    fontWeight: 600,
+                                    fontSize: '0.875rem',
+                                    px: 2,
+                                  }}
+                                />
+                              </Box>
+                            ))
+                          ) : (
+                            <Box
+                              sx={{
+                                textAlign: 'center',
+                                p: 4,
+                                border: '2px dashed',
+                                borderColor: 'grey.300',
+                                borderRadius: 3,
+                                bgcolor: 'grey.50',
+                              }}
+                            >
+                              <Schedule sx={{ fontSize: 48, color: 'grey.400', mb: 2 }} />
+                              <Typography
+                                variant='h6'
+                                color='text.secondary'
+                                gutterBottom
+                              >
+                                No Follow-up Reminders
+                              </Typography>
+                              <Typography
+                                variant='body2'
+                                color='text.secondary'
+                              >
+                                No follow-up reminders have been configured for this client
+                              </Typography>
+                            </Box>
+                          )}
                         </Box>
                       </Box>
                     </Box>
